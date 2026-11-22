@@ -23,5 +23,12 @@ __author__ = "yu9824"
 __copyright__ = "Copyright © 2026 yu9824"
 
 from ._encode import ErrorLevel, make_qr, render_terminal, save_qr
+from ._text import escape_control_chars
 
-__all__ = ("ErrorLevel", "make_qr", "render_terminal", "save_qr")
+__all__ = (
+    "ErrorLevel",
+    "escape_control_chars",
+    "make_qr",
+    "render_terminal",
+    "save_qr",
+)
