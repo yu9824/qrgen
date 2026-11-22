@@ -2,9 +2,8 @@
 
 ## Architecture
 
-純 Python のライブラリ (src レイアウト) と、それを使う実験用ディレクトリの
-同居。ライブラリ側は依存を最小に保ち、実験に要るもの (numpy, pandas,
-jupyter など) は開発環境 (conda) にだけ入れる。
+純 Python のライブラリ (src レイアウト) と、それを呼ぶ CLI
+(`__main__.py`)。依存は最小に保ち、重いものは optional extra に分ける。
 
 ## Core Technologies
 
@@ -20,8 +19,8 @@ jupyter など) は開発環境 (conda) にだけ入れる。
 ## Dependencies
 
 - 実行時の依存は持たない (標準ライブラリだけで動かす)
-- extras: `test` (pytest)、`dev` (build)、`optional` (colorlog, tqdm,
-  joblib)、`docs` (Sphinx 一式)
+- extras: `test` (pytest)、`dev` (build)、`optional` (colorlog)、
+  `docs` (Sphinx 一式)
 - optional な依存は無くても import が通るようにする (structure.md 参照)
 - 下限は「動作を確認した版」の意味で、Dependabot も新版を許容できる限り
   上げない (`versioning-strategy: increase-if-necessary`)
@@ -52,7 +51,6 @@ jupyter など) は開発環境 (conda) にだけ入れる。
 
 ### Required Tools
 - Dev Container (VS Code) か、conda + `pip install -e ".[dev,test,optional]"`
-- Docker (利用者向けイメージのビルド)
 
 ### Common Commands
 ```bash
@@ -61,19 +59,16 @@ jupyter など) は開発環境 (conda) にだけ入れる。
 # Type check: mypy src
 # Docs: sphinx-apidoc -f -o ./docs_src ./src/<package> --module-first && sphinx-build -b html ./docs_src ./docs
 # Build: python -m build
-# User image: docker build -f docker/Dockerfile -t <package> . && docker run --rm -it <package>
 ```
 
 ## Key Technical Decisions
 
-- **conda は開発環境、pip はライブラリ**: 実験の重い依存は conda で揃え、
+- **conda は開発環境、pip はライブラリ**: 開発の道具は conda で揃え、
   ライブラリの依存宣言 (pyproject.toml) には持ち込まない
-- **Docker は用途で分ける**: `.devcontainer/` は開発用 (道具を足す方向)、
-  `docker/` は利用者向け (wheel だけを入れた最小イメージ)
 - **CI は paths で絞る**: 必須チェックにする workflow は `dorny/paths-filter`
   で job 単位に飛ばす (workflow ごと飛ぶと Pending のまま残るため)
-- **リリース**: タグの push で build し、設定すれば PyPI にも出す
-  (`HOW_TO_RELEASE.md`)
+- **リリース**: タグの push で build し、署名して GitHub Releases に上げる。
+  PyPI には出さない (`HOW_TO_RELEASE.md`)
 
 ---
-_updated_at: 2026-11-07_
+_updated_at: 2026-11-22_

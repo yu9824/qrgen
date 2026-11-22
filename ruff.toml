@@ -17,8 +17,3 @@ unfixable = ["F401"]
 [lint.pydocstyle]
 # select に "D" (pydocstyle) を入れたときだけ効く。今は入れていない
 convention = "numpy"
-
-[lint.per-file-ignores]
-# jupytext でペアにした .py では、markdown セルがコメント行になって長くなる
-"docs_src/tutorials/*.py" = ["E501"]
-"notebooks/**/*.py" = ["E501"]

@@ -1,4 +1,4 @@
-"""Tests of ``python_template.logging``."""
+"""Tests of ``qrlocal.logging``."""
 
 from __future__ import annotations
 
@@ -10,8 +10,8 @@ import sys
 
 import pytest
 
-import python_template.logging
-from python_template.logging import (
+import qrlocal.logging
+from qrlocal.logging import (
     CRITICAL,
     DEBUG,
     ERROR,
@@ -28,7 +28,7 @@ from python_template.logging import (
     get_library_root_logger,
 )
 
-LIBRARY_NAME = "python_template"
+LIBRARY_NAME = "qrlocal"
 
 
 @pytest.fixture(autouse=True)
@@ -87,8 +87,8 @@ class _ListHandler(logging.Handler):
 
 
 def test_all_public_names_are_importable():
-    for name in python_template.logging.__all__:
-        assert hasattr(python_template.logging, name)
+    for name in qrlocal.logging.__all__:
+        assert hasattr(qrlocal.logging, name)
 
 
 def test_level_constants_are_the_standard_library_values():

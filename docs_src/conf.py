@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-from python_template import __version__
+from qrlocal import __version__
 
-project = "python-template"
+project = "qrlocal"
 copyright = "2026, yu9824"
 author = "yu9824"
 release = __version__

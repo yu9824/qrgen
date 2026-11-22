@@ -86,4 +86,4 @@ RUN mamba env create -y -f /tmp/environment.yml \
     && mamba clean -yaf \
     && rm /tmp/environment.yml
 
-WORKDIR /workspaces/python-template
+WORKDIR /workspaces/qrlocal

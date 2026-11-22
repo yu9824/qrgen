@@ -19,24 +19,11 @@ e.g.) v1.0.0 v3.2.1-alpha.0 v4.1.2-beta.1 v0.2.1-rc.0
 
 ## リリース
 
-PyPIとGithub上でのリリースは1つのワークフローで同時に行えるが、下記の通り初期設定が必要。
+タグを push すると `.github/workflows/release.yml` が wheel と sdist を作り、
+Sigstore で署名して GitHub Releases に上げる。PyPI / conda-forge には公開しない。
 
-### PyPIとGithub
-
-1. `release.yml` の `# FIXME: uncomment` の部分をアンコメントする。
-2. パッケージ名を変える ( `python-template` のところ)
-
-### conda
-
-botを使って自動でレシピを作ってくれる。requirementsは変わらなかったりするので手で直さなきゃいけない場面も多そう。
+利用者は git から入れる:
 
 ```bash
-git remote add regro-cf-autotick-bot git@github.com:regro-cf-autotick-bot/python-template-feedstock.git
-git fetch regro-cf-autotick-bot
-
+pip install "qrlocal[camera] @ git+https://github.com/yu9824/qrlocal.git@v0.0.1"
 ```
-
-#### condaのbotによるリリース参考
-
-- [Official Documents](https://conda-forge.org/docs/maintainer/updating_pkgs/)
-- [日本語でのブログ記事](https://zenn.dev/pejpo/articles/9f767fa1bf031e)
