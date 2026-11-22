@@ -41,10 +41,11 @@
 # パッケージ内は相対 import
 from ._helpers import is_installed
 
+
 # optional な依存は、使う関数の中で import する
 def run():
     if not is_installed("cv2"):
-        raise ImportError("... requires OpenCV; install it with `pip install ...`.")
+        raise ImportError("... requires OpenCV; `pip install ...`")
     import cv2
 ```
 

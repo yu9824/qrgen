@@ -8,16 +8,16 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "qrlocal"
 dynamic = ["version"]
-dependencies = []
+dependencies = ["segno>=1.6.6"]
 requires-python = ">= 3.10"
 authors = [{ name = "yu9824" }]
 maintainers = [{ name = "yu9824" }]
-description = ""
+description = "Generate and read QR codes locally, without network access."
 readme = { file = "README.md", content-type = "text/markdown" }
 # https://spdx.org/licenses/
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
-keywords = []
+keywords = ["qrcode", "qr", "offline", "cli"]
 # https://pypi.org/classifiers/
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -32,6 +32,9 @@ classifiers = [
 test = ["pytest"]
 dev = ["build"]
 optional = ["colorlog"]
+# Reading QR codes. opencv-python cannot be installed together with the
+# other OpenCV wheels (opencv-python-headless, opencv-contrib-python, ...).
+camera = ["opencv-python>=5.1.0"]
 docs = [
     "sphinx",
     "myst-parser",
@@ -49,11 +52,8 @@ Tracker = "https://github.com/yu9824/qrlocal/issues"
 "Release Notes" = "https://github.com/yu9824/qrlocal/releases"
 # Changelog = "https://github.com/yu9824/qrlocal/blob/main/CHANGELOG.md"
 
-# [project.scripts]
-# qrlocal = "qrlocal.__main__:entrypoint"
-
-# [project.gui-scripts]
-# qrlocal-gui = "qrlocal:main_gui"
+[project.scripts]
+qrlocal = "qrlocal.__main__:entrypoint"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

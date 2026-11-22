@@ -18,9 +18,12 @@
 
 ## Dependencies
 
-- 実行時の依存は持たない (標準ライブラリだけで動かす)
+- 実行時の依存は segno (QR の生成。純 Python で、それ自体は依存なし) だけ。
+  通信する依存・依存の多いものは入れない
 - extras: `test` (pytest)、`dev` (build)、`optional` (colorlog)、
-  `docs` (Sphinx 一式)
+  `camera` (opencv-python。QR の読み取り)、`docs` (Sphinx 一式)
+- `opencv-python` は他の OpenCV の wheel (`-headless`, `-contrib`) と同じ
+  環境に入れられない
 - optional な依存は無くても import が通るようにする (structure.md 参照)
 - 下限は「動作を確認した版」の意味で、Dependabot も新版を許容できる限り
   上げない (`versioning-strategy: increase-if-necessary`)
@@ -50,7 +53,7 @@
 ## Development Environment
 
 ### Required Tools
-- Dev Container (VS Code) か、conda + `pip install -e ".[dev,test,optional]"`
+- Dev Container (VS Code) か、conda + `pip install -e ".[dev,test,optional,camera]"`
 
 ### Common Commands
 ```bash
