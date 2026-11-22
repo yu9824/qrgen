@@ -49,8 +49,8 @@ Tracker = "https://github.com/yu9824/qrlocal/issues"
 "Release Notes" = "https://github.com/yu9824/qrlocal/releases"
 # Changelog = "https://github.com/yu9824/qrlocal/blob/main/CHANGELOG.md"
 
-# [project.scripts]
-# qrlocal = "qrlocal.__main__:entrypoint"
+[project.scripts]
+qrlocal = "qrlocal.__main__:entrypoint"
 
 # [project.gui-scripts]
 # qrlocal-gui = "qrlocal:main_gui"
