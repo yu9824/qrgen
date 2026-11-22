@@ -60,12 +60,12 @@ def _get_library_name() -> str:
     Returns
     -------
     str
-        The root package name (e.g., 'python_template').
+        The root package name (e.g., 'qrlocal').
 
     Examples
     --------
-    If called from `python_template.logging._logging`, returns
-    'python_template'.
+    If called from `qrlocal.logging._logging`, returns
+    'qrlocal'.
     """
     return __name__.split(".")[0]
 
@@ -253,7 +253,7 @@ def get_library_root_logger() -> Logger:
 
     This function returns the root logger for the library, ensuring it is
     properly configured with a default handler and logging level. The logger
-    name corresponds to the top-level package name (e.g., 'python_template').
+    name corresponds to the top-level package name (e.g., 'qrlocal').
 
     The logger is automatically configured on first access with:
 
@@ -270,7 +270,7 @@ def get_library_root_logger() -> Logger:
     --------
     >>> logger = get_library_root_logger()
     >>> logger.info("Library initialized")
-    2026-01-01 00:00:00,000 - python_template:2[INFO] - Library initialized
+    2026-01-01 00:00:00,000 - qrlocal:2[INFO] - Library initialized
 
     See Also
     --------
@@ -296,7 +296,7 @@ def get_child_logger(name: str) -> Logger:
         - The library name itself (in the package's `__init__.py`), which
           gives the library's root logger
         - A name within the library's namespace
-          (e.g., 'python_template.module')
+          (e.g., 'qrlocal.module')
         - The string '__main__' for scripts executed directly
 
     Returns
@@ -311,10 +311,10 @@ def get_child_logger(name: str) -> Logger:
 
     Examples
     --------
-    >>> # In a module: python_template/utils.py
+    >>> # In a module: qrlocal/utils.py
     >>> logger = get_child_logger(__name__)
     >>> logger.info("Module loaded")
-    2026-01-01 00:00:00,000 - python_template.utils:3[INFO] - Module loaded
+    2026-01-01 00:00:00,000 - qrlocal.utils:3[INFO] - Module loaded
     """
     root_logger = get_library_root_logger()
     library_name = root_logger.name
@@ -405,7 +405,7 @@ class catch_default_handler:
 
     Examples
     --------
-    >>> from python_template.logging import (
+    >>> from qrlocal.logging import (
     ...     get_child_logger,
     ...     catch_default_handler,
     ... )
@@ -489,7 +489,7 @@ class catch_all_handler:
 
     Examples
     --------
-    >>> from python_template.logging import (
+    >>> from qrlocal.logging import (
     ...     get_child_logger,
     ...     get_library_root_logger,
     ...     catch_all_handler,

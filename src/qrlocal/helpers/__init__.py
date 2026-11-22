@@ -5,7 +5,7 @@
 
 Examples
 --------
-    >>> from python_template.helpers import is_installed
+    >>> from qrlocal.helpers import is_installed
     >>> if is_installed("cv2"):
     ...     import cv2
 

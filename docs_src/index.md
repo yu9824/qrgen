@@ -1,4 +1,4 @@
-# `python-template`
+# `qrlocal`
 
 ```{toctree}
 :maxdepth: 2

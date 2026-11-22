@@ -1,4 +1,4 @@
-"""Tests of ``python_template.helpers``."""
+"""Tests of ``qrlocal.helpers``."""
 
 from __future__ import annotations
 
@@ -6,25 +6,25 @@ import sys
 
 import pytest
 
-import python_template.helpers
-from python_template.helpers import is_argument, is_installed
+import qrlocal.helpers
+from qrlocal.helpers import is_argument, is_installed
 
 
 def test_all_public_names_are_importable():
-    for name in python_template.helpers.__all__:
-        assert hasattr(python_template.helpers, name)
+    for name in qrlocal.helpers.__all__:
+        assert hasattr(qrlocal.helpers, name)
 
 
 # --- is_installed ------------------------------------------------------------
 
 
-@pytest.mark.parametrize("package_name", ["sys", "pytest", "python_template"])
+@pytest.mark.parametrize("package_name", ["sys", "pytest", "qrlocal"])
 def test_is_installed_returns_true_for_an_installed_package(package_name):
     assert is_installed(package_name) is True
 
 
 def test_is_installed_returns_false_for_a_missing_package():
-    assert is_installed("python_template_package_that_does_not_exist") is False
+    assert is_installed("qrlocal_package_that_does_not_exist") is False
 
 
 def test_is_installed_returns_false_for_a_blocked_package(monkeypatch):

@@ -6,7 +6,7 @@ requires = ["setuptools>=77.0.3", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "python-template"
+name = "qrlocal"
 dynamic = ["version"]
 dependencies = []
 requires-python = ">= 3.10"
@@ -41,19 +41,19 @@ docs = [
 # gui = ["TkEasyGUI"]
 
 [project.urls]
-Homepage = "https://github.com/yu9824/python-template"
-# Documentation = "https://yu9824.github.io/python-template/"
-# PyPI = "https://pypi.org/project/python-template/"
-Source = "https://github.com/yu9824/python-template"
-Tracker = "https://github.com/yu9824/python-template/issues"
-"Release Notes" = "https://github.com/yu9824/python-template/releases"
-# Changelog = "https://github.com/yu9824/python-template/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/yu9824/qrlocal"
+# Documentation = "https://yu9824.github.io/qrlocal/"
+# PyPI = "https://pypi.org/project/qrlocal/"
+Source = "https://github.com/yu9824/qrlocal"
+Tracker = "https://github.com/yu9824/qrlocal/issues"
+"Release Notes" = "https://github.com/yu9824/qrlocal/releases"
+# Changelog = "https://github.com/yu9824/qrlocal/blob/main/CHANGELOG.md"
 
 # [project.scripts]
-# python-template = "python_template.__main__:entrypoint"
+# qrlocal = "qrlocal.__main__:entrypoint"
 
 # [project.gui-scripts]
-# python-template-gui = "python_template:main_gui"
+# qrlocal-gui = "qrlocal:main_gui"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
@@ -62,12 +62,12 @@ package-dir = { "" = "src" }
 
 # __init__.py に __version__ = "X.Y.Z" を直書きし、動的バージョンとして使う場合
 # [tool.setuptools.dynamic]
-# version = { attr = "python_template.__version__" }
+# version = { attr = "qrlocal.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src/"]
 
 # 空でも、この節があると setuptools-scm が git タグからバージョンを決める。
 # version file (_version.py) は書き出さない。__version__ はインストール済みの
-# メタデータから importlib.metadata で読む (src/python_template/__init__.py)。
+# メタデータから importlib.metadata で読む (src/qrlocal/__init__.py)。
 [tool.setuptools_scm]

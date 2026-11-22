@@ -6,7 +6,7 @@ from importlib.metadata import PackageNotFoundError, version
 # メタデータへ書き込まれる。そこから読むので、インストールせずに
 # src を直接 import したときは "unknown" になる。
 try:
-    __version__ = version("python-template")
+    __version__ = version("qrlocal")
 except PackageNotFoundError:
     __version__ = "unknown"
 
