@@ -1,4 +1,4 @@
-"""Command line interface: ``qrlocal encode``."""
+"""Command line interface: ``qrlocal encode`` / ``decode`` / ``scan``."""
 
 from __future__ import annotations
 
@@ -7,11 +7,17 @@ import sys
 from collections.abc import Sequence
 
 from . import __version__
+from ._decode import INSTALL_HINT, decode_image, scan_camera
 from ._encode import ERROR_LEVELS, render_terminal, save_qr
+from ._text import escape_control_chars
 
 __all__ = ("entrypoint", "main")
 
 _STDIN = "-"
+
+
+class _Cancelled(Exception):
+    """The user stopped the command."""
 
 
 def _read_text(text: str | None) -> str:
@@ -54,6 +60,54 @@ def _run_encode(args: argparse.Namespace) -> None:
         overwrite=args.force,
     )
     print(f"wrote {path}", file=sys.stderr)
+
+
+def _printable(text: str, raw: bool) -> str:
+    # Decoded text comes from anyone; escape what could control the
+    # terminal unless the user asks for the bytes as they are.
+    return text if raw else escape_control_chars(text)
+
+
+def _run_decode(args: argparse.Namespace) -> None:
+    missing = []
+    for path in args.images:
+        texts = decode_image(path)
+        if not texts:
+            missing.append(path)
+        prefix = f"{path}: " if len(args.images) > 1 else ""
+        for text in texts:
+            print(prefix + _printable(text, args.raw))
+    if missing:
+        raise ValueError(f"no QR code found in {', '.join(missing)}.")
+
+
+def _run_scan(args: argparse.Namespace) -> None:
+    stop = (
+        "press q or Esc in the preview window"
+        if args.preview
+        else "press Ctrl+C"
+    )
+    print(
+        f"Show a QR code to camera {args.device} ({stop} to stop).",
+        file=sys.stderr,
+    )
+    text = scan_camera(
+        device=args.device, timeout=args.timeout, preview=args.preview
+    )
+    if text is None:
+        raise _Cancelled("stopped before a QR code was read.")
+    print(_printable(text, args.raw))
+
+
+def _add_raw_option(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--raw",
+        action="store_true",
+        help=(
+            "print control characters as they are (by default they are "
+            "escaped, so a crafted code cannot control the terminal)"
+        ),
+    )
 
 
 def _build_parser(prog: str | None) -> argparse.ArgumentParser:
@@ -125,6 +179,52 @@ def _build_parser(prog: str | None) -> argparse.ArgumentParser:
         help="for a terminal with a light background",
     )
     encode.set_defaults(run=_run_encode)
+
+    decode = subparsers.add_parser(
+        "decode",
+        help="read QR codes in image files",
+        description=(
+            "Print the text of the QR codes in image files. "
+            f"Needs OpenCV: {INSTALL_HINT}"
+        ),
+    )
+    decode.add_argument(
+        "images", nargs="+", metavar="IMAGE", help="PNG, JPEG, BMP, ..."
+    )
+    _add_raw_option(decode)
+    decode.set_defaults(run=_run_decode)
+
+    scan = subparsers.add_parser(
+        "scan",
+        help="read a QR code with the camera",
+        description=(
+            "Print the text of the first QR code the camera sees. Frames "
+            f"stay in memory and are never saved. Needs OpenCV: "
+            f"{INSTALL_HINT}"
+        ),
+    )
+    scan.add_argument(
+        "-d",
+        "--device",
+        type=int,
+        default=0,
+        help="camera index (default: %(default)s)",
+    )
+    scan.add_argument(
+        "-t",
+        "--timeout",
+        type=float,
+        metavar="SECONDS",
+        help="give up after this many seconds (default: wait forever)",
+    )
+    scan.add_argument(
+        "--no-preview",
+        dest="preview",
+        action="store_false",
+        help="do not open a window showing the camera",
+    )
+    _add_raw_option(scan)
+    scan.set_defaults(run=_run_scan)
     return parser
 
 
@@ -141,15 +241,19 @@ def main(cli_args: Sequence[str], prog: str | None = None) -> int:
     Returns
     -------
     int
-        Exit status: 0 on success, 1 on an error with a message on stderr.
+        Exit status: 0 on success, 1 on an error with a message on stderr,
+        130 when the user stops ``scan``.
     """
     parser = _build_parser(prog)
     args = parser.parse_args(cli_args)
     try:
         args.run(args)
-    except (ValueError, OSError) as exc:
+    except (ValueError, OSError, ImportError, RuntimeError) as exc:
         print(f"{parser.prog}: error: {exc}", file=sys.stderr)
         return 1
+    except (_Cancelled, KeyboardInterrupt):
+        print(f"{parser.prog}: stopped", file=sys.stderr)
+        return 130
     return 0
 
 

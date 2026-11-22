@@ -8,7 +8,7 @@ import sys
 
 import pytest
 
-from qrlocal import render_terminal
+from qrlocal import render_terminal, save_qr
 from qrlocal.__main__ import main
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -165,3 +165,153 @@ def test_encode_rejects_an_unknown_error_level(capsys):
         main(["encode", "hello", "--error", "X"])
 
     assert excinfo.value.code == 2
+
+
+# --- decode ------------------------------------------------------------------
+
+
+@pytest.fixture
+def opencv():
+    return pytest.importorskip("cv2")
+
+
+def test_decode_prints_the_text(capsys, tmp_path, opencv):
+    path = save_qr("こんにちは", tmp_path / "code.png")
+
+    assert main(["decode", str(path)]) == 0
+
+    assert capsys.readouterr().out == "こんにちは\n"
+
+
+def test_decode_prefixes_the_path_for_several_images(capsys, tmp_path, opencv):
+    first = save_qr("one", tmp_path / "1.png")
+    second = save_qr("two", tmp_path / "2.png")
+
+    assert main(["decode", str(first), str(second)]) == 0
+
+    assert capsys.readouterr().out == f"{first}: one\n{second}: two\n"
+
+
+def test_decode_escapes_control_characters(capsys, tmp_path, opencv):
+    path = save_qr("hi\x1b[2J\u202e", tmp_path / "code.png")
+
+    assert main(["decode", str(path)]) == 0
+
+    assert capsys.readouterr().out == "hi\\x1b[2J\\u202e\n"
+
+
+def test_decode_raw_prints_control_characters(capsys, tmp_path, opencv):
+    path = save_qr("hi\x1b[2J", tmp_path / "code.png")
+
+    assert main(["decode", "--raw", str(path)]) == 0
+
+    assert capsys.readouterr().out == "hi\x1b[2J\n"
+
+
+def test_decode_reports_images_without_a_code(capsys, tmp_path, opencv):
+    found = save_qr("one", tmp_path / "1.png")
+    blank = tmp_path / "blank.png"
+    opencv.imwrite(str(blank), opencv.imread(str(found)) * 0 + 255)
+
+    assert main(["decode", str(found), str(blank)]) == 1
+
+    captured = capsys.readouterr()
+    assert captured.out == f"{found}: one\n"
+    assert f"no QR code found in {blank}" in captured.err
+
+
+def test_decode_reports_a_missing_file(capsys, tmp_path, opencv):
+    assert main(["decode", str(tmp_path / "missing.png")]) == 1
+
+    assert "missing.png" in capsys.readouterr().err
+
+
+def test_decode_without_opencv_tells_how_to_install(capsys, monkeypatch):
+    monkeypatch.setitem(sys.modules, "cv2", None)
+
+    assert main(["decode", "code.png"]) == 1
+
+    assert 'pip install "qrlocal[camera]"' in capsys.readouterr().err
+
+
+# --- scan --------------------------------------------------------------------
+
+
+@pytest.fixture
+def fake_scan(monkeypatch):
+    """Replace scan_camera; set the result and read back the arguments."""
+    calls = []
+
+    def install(result):
+        def scan(**kwargs):
+            calls.append(kwargs)
+            if isinstance(result, BaseException):
+                raise result
+            return result
+
+        monkeypatch.setattr("qrlocal.__main__.scan_camera", scan)
+        return calls
+
+    return install
+
+
+def test_scan_prints_the_text(capsys, fake_scan):
+    calls = fake_scan("hello")
+
+    assert main(["scan"]) == 0
+
+    assert calls == [{"device": 0, "timeout": None, "preview": True}]
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+    assert "q or Esc" in captured.err
+
+
+def test_scan_passes_the_options(capsys, fake_scan):
+    calls = fake_scan("hello")
+
+    args = ["scan", "-d", "1", "-t", "2.5", "--no-preview"]
+    assert main(args) == 0
+
+    assert calls == [{"device": 1, "timeout": 2.5, "preview": False}]
+    assert "Ctrl+C" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("args", "out"),
+    [(["scan"], "a\\x07b\n"), (["scan", "--raw"], "a\x07b\n")],
+)
+def test_scan_escapes_control_characters(capsys, fake_scan, args, out):
+    fake_scan("a\x07b")
+
+    assert main(args) == 0
+
+    assert capsys.readouterr().out == out
+
+
+@pytest.mark.parametrize("result", [None, KeyboardInterrupt()])
+def test_scan_stopped_by_the_user_exits_with_130(capsys, fake_scan, result):
+    fake_scan(result)
+
+    assert main(["scan"], prog="qrlocal") == 130
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "qrlocal: stopped" in captured.err
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        TimeoutError("no QR code read"),
+        RuntimeError("cannot open camera 0"),
+        ImportError("requires OpenCV"),
+    ],
+)
+def test_scan_reports_errors(capsys, fake_scan, error):
+    fake_scan(error)
+
+    assert main(["scan"], prog="qrlocal") == 1
+
+    # The last line, after the prompt to show a code.
+    err = capsys.readouterr().err
+    assert err.splitlines()[-1] == f"qrlocal: error: {error}"
