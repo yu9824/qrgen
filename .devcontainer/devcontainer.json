@@ -12,7 +12,7 @@
   //
   // --python を明示するのは、postCreateCommand が非対話シェルで走るため。
   // conda activate は対話シェルでしか効かない (下の remoteEnv と同じ事情)。
-  "postCreateCommand": "uv pip install --python /opt/conda/envs/work/bin/python -e '.[dev,test,optional]'",
+  "postCreateCommand": "uv pip install --python /opt/conda/envs/work/bin/python -e '.[dev,test,optional,camera]'",
   // conda activate は対話シェル (.bashrc / .zshrc) でしか走らない。VS Code
   // サーバは非対話で起動するため、これが無いと拡張から起動されるコマンド
   // (.vscode/settings.json の RunOnSave など) が base の PATH で実行される。
