@@ -32,6 +32,9 @@ classifiers = [
 test = ["pytest"]
 dev = ["build"]
 optional = ["colorlog"]
+# Reading QR codes. opencv-python cannot be installed together with the
+# other OpenCV wheels (opencv-python-headless, opencv-contrib-python, ...).
+camera = ["opencv-python>=5.1.0"]
 docs = [
     "sphinx",
     "myst-parser",
