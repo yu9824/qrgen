@@ -1,0 +1,73 @@
+# https://packaging.python.org/ja/latest/guides/writing-pyproject-toml/
+[build-system]
+# __init__.py に __version__ = "X.Y.Z" を直書きし、動的バージョンとして使う場合
+# requires = ["setuptools>=77.0.3"]
+requires = ["setuptools>=77.0.3", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-template"
+dynamic = ["version"]
+dependencies = []
+requires-python = ">= 3.10"
+authors = [{ name = "yu9824" }]
+maintainers = [{ name = "yu9824" }]
+description = ""
+readme = { file = "README.md", content-type = "text/markdown" }
+# https://spdx.org/licenses/
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+keywords = []
+# https://pypi.org/classifiers/
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+] # https://pypi.org/classifiers/
+
+[project.optional-dependencies]
+test = ["pytest"]
+dev = ["build"]
+optional = ["colorlog", "tqdm", "joblib"]
+docs = [
+    "sphinx",
+    "myst-parser",
+    "myst-nb",
+    "sphinx-book-theme",
+]
+# gui = ["TkEasyGUI"]
+
+[project.urls]
+Homepage = "https://github.com/yu9824/python-template"
+# Documentation = "https://yu9824.github.io/python-template/"
+# PyPI = "https://pypi.org/project/python-template/"
+Source = "https://github.com/yu9824/python-template"
+Tracker = "https://github.com/yu9824/python-template/issues"
+"Release Notes" = "https://github.com/yu9824/python-template/releases"
+# Changelog = "https://github.com/yu9824/python-template/blob/main/CHANGELOG.md"
+
+# [project.scripts]
+# python-template = "python_template.__main__:entrypoint"
+
+# [project.gui-scripts]
+# python-template-gui = "python_template:main_gui"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+# setuptools>=v69.0.0以降は、py.typed や .pyiが自動で含まれる
+
+# __init__.py に __version__ = "X.Y.Z" を直書きし、動的バージョンとして使う場合
+# [tool.setuptools.dynamic]
+# version = { attr = "python_template.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+
+# 空でも、この節があると setuptools-scm が git タグからバージョンを決める。
+# version file (_version.py) は書き出さない。__version__ はインストール済みの
+# メタデータから importlib.metadata で読む (src/python_template/__init__.py)。
+[tool.setuptools_scm]
