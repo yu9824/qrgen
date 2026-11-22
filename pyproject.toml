@@ -55,9 +55,6 @@ Tracker = "https://github.com/yu9824/qrlocal/issues"
 [project.scripts]
 qrlocal = "qrlocal.__main__:entrypoint"
 
-# [project.gui-scripts]
-# qrlocal-gui = "qrlocal:main_gui"
-
 [tool.setuptools]
 package-dir = { "" = "src" }
 
