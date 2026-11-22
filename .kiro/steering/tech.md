@@ -18,7 +18,8 @@
 
 ## Dependencies
 
-- 実行時の依存は持たない (標準ライブラリだけで動かす)
+- 実行時の依存は segno (QR の生成。純 Python で、それ自体は依存なし) だけ。
+  通信する依存・依存の多いものは入れない
 - extras: `test` (pytest)、`dev` (build)、`optional` (colorlog)、
   `docs` (Sphinx 一式)
 - optional な依存は無くても import が通るようにする (structure.md 参照)
