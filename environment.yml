@@ -5,19 +5,8 @@ channels:
 
 dependencies:
   - python=3.12
-  - jupyter
-  - jupytext
-  - matplotlib
-  - matplotlib-fontja
-  - numpy
-  - pandas
   - pytest
   - pip
-  # for kaggle
-  # - kaggle
-  # - lightgbm
-  # - scikit-learn
-  # - networkx
 
   # このファイルは .devcontainer/Dockerfile でイメージビルド時に読まれる (env create)。
   # そのため「ソースが無いと解決できない依存」をここに書いてはいけない。

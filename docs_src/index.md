@@ -6,10 +6,3 @@
 
 modules
 ```
-
-```{toctree}
-:maxdepth: 2
-:caption: Tutorials
-
-tutorials/index
-```

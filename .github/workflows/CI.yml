@@ -54,7 +54,6 @@ jobs:
               - 'src/**'
               - '**/*.py'
               - 'tests/**'
-              - 'packages/**'
               - '.github/workflows/CI.yml'
               - 'pyproject.toml'
               - 'setup.py'
