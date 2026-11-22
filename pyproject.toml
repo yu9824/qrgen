@@ -8,16 +8,16 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "qrlocal"
 dynamic = ["version"]
-dependencies = []
+dependencies = ["segno>=1.6.6"]
 requires-python = ">= 3.10"
 authors = [{ name = "yu9824" }]
 maintainers = [{ name = "yu9824" }]
-description = ""
+description = "Generate and read QR codes locally, without network access."
 readme = { file = "README.md", content-type = "text/markdown" }
 # https://spdx.org/licenses/
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
-keywords = []
+keywords = ["qrcode", "qr", "offline", "cli"]
 # https://pypi.org/classifiers/
 classifiers = [
     "Programming Language :: Python :: 3",

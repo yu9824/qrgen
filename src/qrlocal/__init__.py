@@ -1,4 +1,12 @@
-""""""
+"""Generate and read QR codes locally, without network access.
+
+Examples
+--------
+    >>> import qrlocal
+    >>> qrlocal.save_qr("https://example.com", "example.png")
+    >>> print(qrlocal.render_terminal("hello"))
+
+"""
 
 from importlib.metadata import PackageNotFoundError, version
 
@@ -14,4 +22,6 @@ __license__ = "MIT"
 __author__ = "yu9824"
 __copyright__ = "Copyright © 2026 yu9824"
 
-# __all__ = ()
+from ._encode import ErrorLevel, make_qr, render_terminal, save_qr
+
+__all__ = ("ErrorLevel", "make_qr", "render_terminal", "save_qr")
